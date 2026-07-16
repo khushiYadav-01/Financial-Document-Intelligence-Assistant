@@ -211,8 +211,9 @@ Dashboard Visualization
 # 📸 Screenshots
 
 ## Dashboard
+<img width="821" height="435" alt="image" src="https://github.com/user-attachments/assets/61a69858-4137-4408-89bc-32c957fe39bb" />
 
-> Add your dashboard screenshot here
+
 
 ```
 assets/dashboard.png
@@ -225,6 +226,8 @@ assets/upload.png
 ```
 
 ## Analytics
+<img width="820" height="415" alt="image" src="https://github.com/user-attachments/assets/35a89a00-8229-4eb7-8006-5eb3f7529ea5" />
+
 
 ```
 assets/analytics.png
