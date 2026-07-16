@@ -1,158 +1,301 @@
-# Financial Document Intelligence & Anomaly Detection
+# 📄 Financial Document Intelligence Assistant
 
-Upload invoices, expense claims, or ledger entries → extract structured
-data via OCR → flag anomalies (duplicate payments, unusual amounts, policy
-violations) so a reviewer only has to look at the transactions that
-actually need attention.
+> An AI-powered financial document processing system that extracts, analyzes, and monitors financial documents using OCR and anomaly detection techniques.
 
-Built for an audit/advisory-style use case: every flag comes with a
-human-readable reason, not just a black-box score.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.11-blue?logo=python">
+  <img src="https://img.shields.io/badge/FastAPI-0.111-green?logo=fastapi">
+  <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react">
+  <img src="https://img.shields.io/badge/Vite-Build-purple?logo=vite">
+  <img src="https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker">
+  <img src="https://img.shields.io/badge/License-MIT-yellow">
+</p>
 
-## How it works
+---
 
-```
- ┌──────────────┐     ┌───────────────────┐     ┌─────────────────────┐
- │  React        │────▶│  FastAPI backend   │────▶│  SQLite / Postgres  │
- │  dashboard    │◀────│  (OCR + ML layer)  │◀────│  (transactions)     │
- └──────────────┘     └───────────────────┘     └─────────────────────┘
-```
+## 📌 Overview
 
-**Extraction (`backend/app/ocr_extract.py`)**
-Tesseract OCR turns images/PDFs into raw text; regex-based parsing pulls
-out vendor, invoice number, amount, date, and a guessed spend category.
-Rule-based on purpose — it's fast, has zero training cost, and every
-extraction can be explained ("here's the exact pattern that matched").
+Financial Document Intelligence Assistant is a full-stack web application that automates financial document processing.
 
-**Anomaly detection (`backend/app/anomaly_detection.py`)** — three
-independent, explainable layers, re-run across all records on every
-upload:
+The application extracts text from invoices and receipts using OCR, stores the extracted data, detects anomalies such as duplicate invoices and unusually large transactions, and visualizes insights through an interactive dashboard.
 
-1. **Duplicate detection** — same vendor + same amount within a 7-day
-   window.
-2. **Statistical outliers** — `IsolationForest` (scikit-learn) over
-   engineered features (amount, log-amount, deviation from that vendor's
-   own average spend).
-3. **Policy violations** — configurable per-category spend limits.
+This project demonstrates backend API development, OCR integration, anomaly detection, database management, and frontend dashboard development.
 
-Every flagged transaction stores a JSON list of the specific reasons it
-was flagged, so the dashboard can show "why," not just "what."
+---
 
-**Frontend (`frontend/`)** — React + Vite dashboard: drag-and-drop
-upload, summary stat cards, an anomaly breakdown chart (Recharts), and a
-filterable transaction table with expandable flag details.
+# ✨ Features
 
-## Project structure
+- 📄 Upload financial documents (PDF, PNG, JPG, TXT)
+- 🔍 OCR-based text extraction
+- 🧾 Invoice information processing
+- 🚩 Duplicate invoice detection
+- 📈 Outlier transaction detection
+- 📊 Interactive analytics dashboard
+- 📉 Spend by category visualization
+- 📋 Transaction history table
+- 🐳 Docker support
+- ⚡ FastAPI REST APIs
+- 🎨 Responsive React UI
 
-```
-financial-doc-intelligence/
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+
+- React
+- Vite
+- JavaScript
+- CSS
+
+## Backend
+
+- FastAPI
+- SQLAlchemy
+- Pydantic
+- Uvicorn
+
+## OCR & Processing
+
+- Tesseract OCR
+- Pillow
+- pdf2image
+- Pandas
+
+## Database
+
+- SQLite
+
+## DevOps
+
+- Docker
+- Docker Compose
+
+---
+
+# 📂 Project Structure
+
+```text
+Financial-Document-Intelligence-Assistant/
+│
 ├── backend/
 │   ├── app/
-│   │   ├── main.py              # FastAPI routes
-│   │   ├── models.py            # SQLAlchemy Transaction model
-│   │   ├── database.py          # DB engine/session
-│   │   ├── ocr_extract.py       # OCR + field extraction
-│   │   └── anomaly_detection.py # ML anomaly detection
+│   │   ├── anomaly_detection.py
+│   │   ├── database.py
+│   │   ├── main.py
+│   │   ├── models.py
+│   │   └── ocr_extract.py
+│   │
 │   ├── sample_data/
-│   │   └── generate_samples.py  # creates demo invoices (incl. planted anomalies)
 │   ├── requirements.txt
 │   └── Dockerfile
+│
 ├── frontend/
 │   ├── src/
-│   │   ├── App.jsx
-│   │   ├── api.js
-│   │   └── components/
-│   │       ├── UploadPanel.jsx
-│   │       ├── SummaryCards.jsx
-│   │       ├── AnomalyChart.jsx
-│   │       └── TransactionsTable.jsx
 │   ├── package.json
+│   ├── vite.config.js
 │   └── Dockerfile
-└── docker-compose.yml
+│
+├── docker-compose.yml
+├── README.md
+└── .gitignore
 ```
 
-## Running locally (without Docker)
+---
 
-### Backend
+# 🚀 Getting Started
+
+## 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/khushiYadav-01/Financial-Document-Intelligence-Assistant.git
+
+cd Financial-Document-Intelligence-Assistant
+```
+
+---
+
+## 2️⃣ Backend Setup
 
 ```bash
 cd backend
-python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
+
+python -m venv .venv
+
+# Windows
+.venv\Scripts\activate
+
 pip install -r requirements.txt
 
-# OCR needs Tesseract installed on your system:
-#   macOS:   brew install tesseract poppler
-#   Ubuntu:  sudo apt install tesseract-ocr poppler-utils
-#   Windows: https://github.com/UB-Mannheim/tesseract/wiki
-
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload
 ```
 
-API docs (auto-generated by FastAPI) will be live at
-`http://localhost:8000/docs`.
+Backend runs on:
 
-### Generate demo data (optional but recommended)
-
-```bash
-cd backend
-python sample_data/generate_samples.py
-# then upload the files in sample_data/generated/ via the dashboard or:
-for f in sample_data/generated/*.txt; do
-  curl -X POST http://localhost:8000/api/upload -F "file=@$f"
-done
+```
+http://127.0.0.1:8000
 ```
 
-This planted set includes a duplicate flight booking, a software invoice
-that blows past its category limit and its own vendor's usual spend, and
-an over-limit client dinner — enough to make the dashboard demo-able out
-of the box.
+Swagger API:
 
-### Frontend
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+## 3️⃣ Frontend Setup
 
 ```bash
 cd frontend
+
 npm install
+
 npm run dev
 ```
 
-Visit `http://localhost:5173`. The Vite dev server proxies `/api`
-requests to `http://localhost:8000` (see `vite.config.js`), so no `.env`
-is needed locally.
+Frontend:
 
-## Running with Docker
-
-```bash
-docker-compose up --build
+```
+http://localhost:5173
 ```
 
-- Frontend: `http://localhost:3000`
-- Backend API: `http://localhost:8000`
+---
 
-## Deploying
+# 📊 Dashboard
 
-**Backend** — any host that runs a Dockerfile works (Render, Railway,
-Fly.io, AWS App Runner). Point it at a persistent volume or swap SQLite
-for Postgres via the `DATABASE_URL` env var (already SQLAlchemy-driven,
-so this is a one-line change).
+The application provides:
 
-**Frontend** — deploy the built `dist/` to Vercel/Netlify, or use the
-included Dockerfile. Set `VITE_API_URL` to your deployed backend's URL
-(see `frontend/.env.example`) so the dashboard talks to it instead of
-the dev proxy.
+- Total Documents
+- Total Value Processed
+- Flagged Transactions
+- Value at Risk
+- Spend by Category
+- Anomaly Breakdown
+- Transactions Table
 
-## Design notes / talking points for a demo or interview
+---
 
-- **Why rule-based OCR parsing instead of an LLM?** It's deterministic,
-  auditable, and free to run at scale — appropriate for a first version
-  where every extraction needs to be explainable. A natural v2 extension
-  is swapping in a document-understanding model (e.g. LayoutLM) for
-  messier real-world scans, while keeping the same downstream anomaly
-  pipeline.
-- **Why three separate anomaly layers instead of one model?** Duplicates
-  and policy violations are exact, rule-based problems — using a black-box
-  model for them would just be slower and less explainable. Isolation
-  Forest is reserved for the genuinely fuzzy case: "is this amount
-  unusual," which doesn't have a clean rule.
-- **Extending it:** add authentication + per-user document scoping, swap
-  SQLite for Postgres, add a "mark as reviewed / false positive" action
-  that feeds back into the anomaly thresholds, or add vendor-level
-  trend charts over time.
+# 📄 Supported Document Types
+
+- PDF
+- PNG
+- JPG / JPEG
+- TXT
+
+---
+
+# 🔍 OCR Workflow
+
+```
+Financial Document
+        │
+        ▼
+OCR Extraction
+        │
+        ▼
+Structured Data
+        │
+        ▼
+Database Storage
+        │
+        ▼
+Anomaly Detection
+        │
+        ▼
+Dashboard Visualization
+```
+
+---
+
+# 📸 Screenshots
+
+## Dashboard
+
+> Add your dashboard screenshot here
+
+```
+assets/dashboard.png
+```
+
+## Upload Panel
+
+```
+assets/upload.png
+```
+
+## Analytics
+
+```
+assets/analytics.png
+```
+
+---
+
+# 📈 Future Improvements
+
+- AI-powered invoice classification
+- Vendor prediction
+- Export reports to PDF
+- Authentication & Authorization
+- Cloud database support
+- Email notifications
+- Multi-user support
+- Machine Learning fraud detection
+
+---
+
+# 🧪 Sample Data
+
+Sample financial documents are available in
+
+```
+backend/sample_data/generated
+```
+
+Use these documents to test the application.
+
+---
+
+# 📦 API Endpoints
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/` | Health Check |
+| POST | `/upload` | Upload Document |
+| GET | `/transactions` | Fetch Transactions |
+| GET | `/summary` | Dashboard Summary |
+
+---
+
+# 💡 Skills Demonstrated
+
+- FastAPI
+- React
+- REST APIs
+- OCR
+- SQLAlchemy
+- Docker
+- SQLite
+- Data Processing
+- Data Visualization
+- Full Stack Development
+
+---
+
+# 👩‍💻 Author
+
+**Khushi Yadav**
+
+AI & Machine Learning Enthusiast • Full Stack Developer
+
+GitHub:
+https://github.com/khushiYadav-01
+
+---
+
+# ⭐ Support
+
+If you found this project useful, consider giving it a ⭐ on GitHub!
+
+---
