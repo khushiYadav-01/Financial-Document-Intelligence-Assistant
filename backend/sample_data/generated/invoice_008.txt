@@ -1,0 +1,5 @@
+Vendor: Precision Consulting Group
+        Invoice Number: INV-2008
+        Date: 18/01/2026
+        Description: Q1 advisory services
+        Total: INR 210,000.00

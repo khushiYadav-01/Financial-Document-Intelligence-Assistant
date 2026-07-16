@@ -1,0 +1,5 @@
+Vendor: Skyline Travels
+        Invoice Number: INV-2003
+        Date: 06/01/2026
+        Description: Flight booking - Bangalore to Mumbai (duplicate submission)
+        Total: INR 12,300.00

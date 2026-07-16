@@ -1,0 +1,5 @@
+Vendor: Café Bloom
+        Invoice Number: INV-2007
+        Date: 15/01/2026
+        Description: Client dinner
+        Total: INR 9,800.00

@@ -1,0 +1,5 @@
+Vendor: CloudSoft Technologies
+        Invoice Number: INV-2005
+        Date: 20/01/2026
+        Description: Additional software license seats
+        Total: INR 940,000.00

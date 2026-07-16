@@ -1,0 +1,5 @@
+Vendor: Café Bloom
+        Invoice Number: INV-2006
+        Date: 12/01/2026
+        Description: Team lunch meeting
+        Total: INR 2,100.00

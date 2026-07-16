@@ -1,0 +1,5 @@
+Vendor: CloudSoft Technologies
+        Invoice Number: INV-2004
+        Date: 10/01/2026
+        Description: Annual software subscription license
+        Total: INR 85,000.00

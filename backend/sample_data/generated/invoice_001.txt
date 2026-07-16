@@ -1,0 +1,6 @@
+Vendor: Acme Office Supplies Pvt Ltd
+        Invoice Number: INV-2001
+        Date: 05/01/2026
+        Category: Office Supplies
+        Description: Printer paper, pens, folders
+        Total: INR 4,500.00
